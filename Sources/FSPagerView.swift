@@ -463,7 +463,13 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
     @objc(selectItemAtIndex:animated:)
     open func selectItem(at index: Int, animated: Bool) {
         let indexPath = self.nearbyIndexPath(for: index)
-        let scrollPosition: UICollectionViewScrollPosition = self.scrollDirection == .horizontal ? .centeredHorizontally : .centeredVertically
+  
+        #if swift(>=4.2)
+          let scrollPosition: UICollectionView.ScrollPosition = self.scrollDirection == .horizontal ? .centeredHorizontally : .centeredVertically
+        #else
+          let scrollPosition: UICollectionViewScrollPosition = self.scrollDirection == .horizontal ? .centeredHorizontally : .centeredVertically
+        #endif
+      
         self.collectionView.selectItem(at: indexPath, animated: animated, scrollPosition: scrollPosition)
     }
     
@@ -540,7 +546,13 @@ open class FSPagerView: UIView,UICollectionViewDataSource,UICollectionViewDelega
             return
         }
         self.timer = Timer.scheduledTimer(timeInterval: TimeInterval(self.automaticSlidingInterval), target: self, selector: #selector(self.flipNext(sender:)), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer!, forMode: .commonModes)
+  
+        #if swift(>=4.2)
+          RunLoop.current.add(self.timer!, forMode: RunLoop.Mode.common)
+        #else
+          RunLoop.current.add(self.timer!, forMode: .commonModes)
+        #endif
+      
     }
     
     @objc
